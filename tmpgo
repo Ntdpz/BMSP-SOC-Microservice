@@ -1,0 +1,124 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
+	"time"
+)
+
+// DocumentLine represents each line item in the document
+type DocumentLine struct {
+	LineID               int     `json:"lineId"`
+	ProductName          string  `json:"productName"`
+	UnitName             string  `json:"unitName"`
+	ChargeAmount         int     `json:"chargeAmount"`
+	BilledQuantity       int     `json:"billedQuantity"`
+	TaxCalculatedAmount  float64 `json:"taxCalculatedAmount"`
+	LineTotalAmount      float64 `json:"lineTotalAmount"`
+	AllowanceTotalAmount float64 `json:"allowanceTotalAmount"`
+	TaxBasisTotalAmount  float64 `json:"taxBasisTotalAmount"`
+	TaxTotalAmount       float64 `json:"taxTotalAmount"`
+	GrandTotalAmount     float64 `json:"grandTotalAmount"`
+	WhtPercent           float64 `json:"whtPercent"`
+	WhtBaht              float64 `json:"whtBaht"`
+	NetAmountDue         float64 `json:"netAmountDue"`
+}
+
+// Document represents the entire document structure
+type Document struct {
+	DocumentID                   string         `json:"documentId"`
+	DocumentTypeCode             string         `json:"documentTypeCode"`
+	IssueDateTime                string         `json:"issueDateTime"`
+	TemplateCode                 string         `json:"templateCode"`
+	DocumentName                 string         `json:"documentName"`
+	IssuerDateTime               string         `json:"issuerDateTime"`
+	IssuerAssignedID             string         `json:"issuerAssignedId"`
+	ReferenceTypeCode            string         `json:"referenceTypeCode"`
+	CreationDateTime             string         `json:"creationDateTime"`
+	PurposeCode                  string         `json:"purposeCode"`
+	PurposeRemark                string         `json:"purposeRemark"`
+	TermValue                    int            `json:"termValue"`
+	DueDateTime                  string         `json:"dueDateTime"`
+	TaxTypeCode                  string         `json:"taxTypeCode"`
+	TaxCalculatedRate            float64        `json:"taxCalculatedRate"`
+	TaxCalculatedAmount          float64        `json:"taxCalculatedAmount"`
+	WhtPercent                   float64        `json:"whtPercent"`
+	OriginalInformationAmount    float64        `json:"originalInformationAmount"`
+	LineTotalAmount              float64        `json:"lineTotalAmount"`
+	DifferenceInformationAmount  float64        `json:"differenceInformationAmount"`
+	AllowanceTotalAmount         float64        `json:"allowanceTotalAmount"`
+	TaxBasisTotalAmount          float64        `json:"taxBasisTotalAmount"`
+	TaxTotalAmount               float64        `json:"taxTotalAmount"`
+	GrandTotalAmount             float64        `json:"grandTotalAmount"`
+	SellerTaxID                  string         `json:"sellerTaxId"`
+	SellerBranchCode             string         `json:"sellerBranchCode"`
+	SellerName                   string         `json:"sellerName"`
+	SellerBranchName             string         `json:"sellerBranchName"`
+	SellerTaxType                string         `json:"sellerTaxType"`
+	SellerEmail                  string         `json:"sellerEmail"`
+	SellerPhoneNumber            string         `json:"sellerPhoneNumber"`
+	SellerBuildingNumber         string         `json:"sellerBuildingNumber"`
+	SellerLineOne                string         `json:"sellerLineOne"`
+	SellerLineTwo                string         `json:"sellerLineTwo"`
+	SellerCountrySubDivisionCode string         `json:"sellerCountrySubDivisionCode"`
+	SellerCountrySubDivisionName string         `json:"sellerCountrySubDivisionName"`
+	SellerCityCode               string         `json:"sellerCityCode"`
+	SellerCityName               string         `json:"sellerCityName"`
+	SellerCitySubDivisionCode    string         `json:"sellerCitySubDivisionCode"`
+	SellerCitySubDivisionName    string         `json:"sellerCitySubDivisionName"`
+	SellerPostcodeCode           string         `json:"sellerPostcodeCode"`
+	BuyerTaxID                   string         `json:"buyerTaxId"`
+	BuyerBranchCode              string         `json:"buyerBranchCode"`
+	BuyerName                    string         `json:"buyerName"`
+	BuyerBranchName              string         `json:"buyerBranchName"`
+	BuyerTaxType                 string         `json:"buyerTaxType"`
+	BuyerEmail                   string         `json:"buyerEmail"`
+	BuyerPhoneNumber             string         `json:"buyerPhoneNumber"`
+	BuyerBuildingNumber          string         `json:"buyerBuildingNumber"`
+	BuyerLineOne                 string         `json:"buyerLineOne"`
+	BuyerLineTwo                 string         `json:"buyerLineTwo"`
+	BuyerCountrySubDivisionCode  string         `json:"buyerCountrySubDivisionCode"`
+	BuyerCountrySubDivisionName  string         `json:"buyerCountrySubDivisionName"`
+	BuyerCityCode                string         `json:"buyerCityCode"`
+	BuyerCityName                string         `json:"buyerCityName"`
+	BuyerCitySubDivisionCode     string         `json:"buyerCitySubDivisionCode"`
+	BuyerCitySubDivisionName     string         `json:"buyerCitySubDivisionName"`
+	BuyerPostcodeCode            string         `json:"buyerPostcodeCode"`
+	Remark                       string         `json:"remark"`
+	Channel                      string         `json:"channel"`
+	DocumentLine                 []DocumentLine `json:"documentLine"`
+}
+
+func main() {
+
+	// เวลาเริ่มต้น
+	start := time.Now()
+
+	// แสดงผลเวลาเริ่มต้น
+	fmt.Println(start)
+
+	for i := 0; i < 250000; i++ {
+		// load file
+		jsonData, err := os.ReadFile("test-inv-bzbs.json")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// แปลง JSON เป็น struct
+		var doc Document
+		err = json.Unmarshal([]byte(jsonData), &doc)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+	}
+
+	// แสดงผลเวลาสิ้นสุด
+	end := time.Now()
+	fmt.Println(end)
+
+	// คำนวนเวลาที่ใช้
+	fmt.Println(end.Sub(start))
+}

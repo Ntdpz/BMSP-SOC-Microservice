@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    environment:
+      - ENV=production
+    volumes:
+      # - .:/app
+      
+      - ./horizon:/app/horizon
+      - ./buzzebee:/app/buzzebee
+      - ./xml_horizon:/app/xml_horizon
+      - ./xml_buzzebee:/app/xml_buzzebee
+
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge

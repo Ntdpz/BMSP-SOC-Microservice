@@ -1,0 +1,56 @@
+package main
+
+import (
+	"log"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/pquerna/otp/totp"
+	"github.com/skip2/go-qrcode"
+)
+
+func main() {
+	app := fiber.New()
+
+	tmpKey := ""
+
+	// Route สำหรับสร้าง QR Code
+	app.Get("/generate", func(c *fiber.Ctx) error {
+		// สร้าง TOTP key สำหรับการทำ 2FA
+		key, err := totp.Generate(totp.GenerateOpts{
+			Issuer:      "MyApp",
+			AccountName: "user@example.com",
+		})
+		if err != nil {
+			return c.Status(500).SendString("Error generating OTP key")
+		}
+
+		// สร้าง URL สำหรับ QR Code
+		otpURL := key.URL()
+
+		// สร้าง QR Code
+		qrCode, err := qrcode.Encode(otpURL, qrcode.Medium, 256)
+		if err != nil {
+			return c.Status(500).SendString("Error generating QR Code")
+		}
+
+		log.Println(key.Secret())
+		tmpKey = key.Secret()
+
+		// ส่ง QR Code กลับไปเป็นภาพใน Response
+		c.Set("Content-Type", "image/png")
+		return c.Send(qrCode)
+	})
+
+	// Route สำหรับตรวจสอบ OTP
+	app.Get("/verify", func(c *fiber.Ctx) error {
+		// ค่าที่ได้จากแอป Google Authenticator
+		otp := c.Query("otp")
+
+		if totp.Validate(otp, tmpKey) {
+			return c.SendString("OTP is valid!")
+		}
+		return c.SendString("Invalid OTP")
+	})
+
+	log.Fatal(app.Listen(":8090"))
+}
