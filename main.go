@@ -25,6 +25,7 @@ func main() {
 
 	h := handlers.NewHandlers()
 
+	app.Get("/", handlers.RootHandler)
 	app.Get("/horizon", middlewares.AuthMiddleware, h.GetListFileFromHorizon)
 	// app.Get("/buzzebee", middlewares.AuthMiddleware, h.GetListFileFromBuzzebee)
 	app.Get("/buzzebee/stat", middlewares.AuthMiddleware, h.GetListFileFromBuzzebeeStat)
@@ -38,5 +39,5 @@ func main() {
 	// go cronjob.StartCronjobBuzzebeeJson()
 	// go cronjob.StartCronjobBuzzebeeJsonToXML()
 
-	log.Fatal(app.Listen(":8090"))
+	log.Fatal(app.Listen(":8070"))
 }
