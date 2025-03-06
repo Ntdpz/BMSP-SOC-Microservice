@@ -14,9 +14,9 @@ func main() {
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",                   // เปิดให้ทุก origin สามารถเข้าถึง API ได้
-		AllowMethods: "GET,POST,PUT,DELETE", // กำหนดให้รองรับ HTTP Methods ที่ต้องการ
-		AllowHeaders: "*",                   // กำหนดให้รองรับ Headers
+		AllowOrigins: "*",                  
+		AllowMethods: "GET,POST,PUT,DELETE", 
+		AllowHeaders: "*",                 
 	}))
 
 	_db := db.InitDB()
