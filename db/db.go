@@ -73,3 +73,7 @@ func Migrate(db *gorm.DB) {
 	}
 
 }
+
+func GetDB() *gorm.DB {
+	return DBPg
+}

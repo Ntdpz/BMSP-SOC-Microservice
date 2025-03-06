@@ -36,6 +36,8 @@ func main() {
 
 	app.Post("/login", h.Login)
 
+	app.Post("/alienvaultcase", handlers.CreateAlienvaultCaseHandler)
+
 	// go cronjob.StartCronjobBuzzebeeJson()
 	// go cronjob.StartCronjobBuzzebeeJsonToXML()
 
