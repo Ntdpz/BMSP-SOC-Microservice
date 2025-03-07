@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bmsp-backend-service/db"
 	"bmsp-backend-service/handlers"
-	"bmsp-backend-service/middlewares"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,29 +12,16 @@ func main() {
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",                  
-		AllowMethods: "GET,POST,PUT,DELETE", 
-		AllowHeaders: "*",                 
+		AllowOrigins: "*",
+		AllowMethods: "GET,POST,PUT,DELETE",
+		AllowHeaders: "*",
 	}))
-
-	_db := db.InitDB()
-
-	db.Migrate(_db)
 
 	h := handlers.NewHandlers()
 
-	app.Get("/", handlers.RootHandler)
-	app.Get("/horizon", middlewares.AuthMiddleware, h.GetListFileFromHorizon)
-	// app.Get("/buzzebee", middlewares.AuthMiddleware, h.GetListFileFromBuzzebee)
-	app.Get("/buzzebee/stat", middlewares.AuthMiddleware, h.GetListFileFromBuzzebeeStat)
-	app.Get("/buzzebee/list", middlewares.AuthMiddleware, h.GetDocumentListFromBuzzebee)
-	app.Post("/buzzebee", middlewares.AuthMiddleware, h.CreateDocumentBuzzebee)
-	app.Post("/buzzebee/multiple", middlewares.AuthMiddleware, h.CreateDocumentBuzzebeeMultiple)
-	app.Post("/xml/:id", middlewares.AuthMiddleware, h.CreateXML)
+	app.Get("/", h.RootHandler)
 
-	app.Post("/login", h.Login)
-
-	app.Post("/alienvaultcase", handlers.CreateAlienvaultCaseHandler)
+	app.Post("/alarm", h.CreateAlarmHandler)
 
 	// go cronjob.StartCronjobBuzzebeeJson()
 	// go cronjob.StartCronjobBuzzebeeJsonToXML()

@@ -8,9 +8,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func CreateAlienvaultCaseHandler(c *fiber.Ctx) error {
+func (h handlers) CreateAlarmHandler(c *fiber.Ctx) error {
 	var requestBody struct {
-		Data []models.AlienvaultCase `json:"data"`
+		Data []models.Alarm `json:"data"`
 	}
 
 	if err := c.BodyParser(&requestBody); err != nil {
@@ -22,9 +22,10 @@ func CreateAlienvaultCaseHandler(c *fiber.Ctx) error {
 		return c.Status(400).SendString("No data provided")
 	}
 
-	err := repositories.InsertAlienvaultCase(requestBody.Data)
+	err := repositories.InsertAlarm(requestBody.Data)
 	if err != nil {
-		return c.Status(500).SendString("Failed to insert cases")
+		log.Println("Error inserting alarm data:", err)
+		return c.Status(500).SendString("Failed to insert alarms")
 	}
 
 	return c.Status(201).JSON(requestBody.Data)

@@ -1,8 +1,6 @@
 package db
 
 import (
-	"bmsp-backend-service/models"
-	"bmsp-backend-service/utils"
 	"fmt"
 	"log"
 
@@ -43,26 +41,6 @@ func InitDB() *gorm.DB {
 	DBPg = DB
 
 	return DB
-}
-
-func Migrate(db *gorm.DB) {
-	db.AutoMigrate(&models.User{})
-	db.AutoMigrate(&models.DocumentLine{})
-	db.AutoMigrate(&models.Document{})
-
-	var user models.User
-	if err := db.Where("username = ?", "admin_axyz").First(&user).Error; err != nil {
-
-		password, err := utils.HashPassword("OcdcT0TLVZ")
-		if err != nil {
-			log.Fatal(err)
-		}
-		db.Create(&models.User{
-			Username: "admin_axyz",
-			Password: password,
-		})
-	}
-
 }
 
 func GetDB() *gorm.DB {
