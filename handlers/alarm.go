@@ -30,3 +30,12 @@ func (h handlers) CreateAlarmHandler(c *fiber.Ctx) error {
 
 	return c.Status(201).JSON(requestBody.Data)
 }
+func (h handlers) GetAllAlarmsHandler(c *fiber.Ctx) error {
+	alarms, err := repositories.GetAllAlarms()
+	if err != nil {
+		log.Println("Error retrieving alarms:", err)
+		return c.Status(500).SendString("Failed to retrieve alarms")
+	}
+
+	return c.JSON(alarms)
+}

@@ -16,3 +16,15 @@ func InsertAlarm(alarms []models.Alarm) error {
 
 	return nil
 }
+
+func GetAllAlarms() ([]models.Alarm, error) {
+	var alarms []models.Alarm
+	db := db.GetDB()
+
+	if err := db.Find(&alarms).Error; err != nil {
+		log.Println("Error retrieving alarms:", err)
+		return nil, err
+	}
+
+	return alarms, nil
+}

@@ -24,10 +24,8 @@ func main() {
 
 	app.Get("/", h.RootHandler)
 
+	app.Get("/getAllAlarams", h.GetAllAlarmsHandler)
 	app.Post("/alarm", h.CreateAlarmHandler)
-
-	// go cronjob.StartCronjobBuzzebeeJson()
-	// go cronjob.StartCronjobBuzzebeeJsonToXML()
 
 	log.Fatal(app.Listen(":8070"))
 }
