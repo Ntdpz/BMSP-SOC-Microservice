@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bmsp-backend-service/db"
 	"bmsp-backend-service/handlers"
 	"log"
 
@@ -9,6 +10,8 @@ import (
 )
 
 func main() {
+	db.InitDB()
+
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
