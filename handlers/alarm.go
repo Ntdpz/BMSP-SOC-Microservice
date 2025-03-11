@@ -31,7 +31,7 @@ func (h handlers) CreateAlarmHandler(c *fiber.Ctx) error {
 
 	return c.Status(201).JSON(requestBody.Data)
 }
-func (h handlers) GetAllAlarmsHandler(c *fiber.Ctx) error {
+func (h handlers) GetAlarms(c *fiber.Ctx) error {
 	isOpenStr := c.Query("is_open")
 	var isOpen *bool
 
@@ -44,11 +44,14 @@ func (h handlers) GetAllAlarmsHandler(c *fiber.Ctx) error {
 		isOpen = &parsedIsOpen
 	}
 
-	alarms, err := repositories.GetAllAlarms(isOpen)
+	alarms, err := repositories.GetAlarms(isOpen)
 	if err != nil {
 		log.Println("Error retrieving alarms:", err)
 		return c.Status(500).SendString("Failed to retrieve alarms")
 	}
 
-	return c.JSON(alarms)
+	return c.JSON(fiber.Map{
+		"data":  alarms,
+		"count": len(alarms),
+	})
 }

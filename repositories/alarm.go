@@ -17,7 +17,7 @@ func InsertAlarm(alarms []models.Alarm) error {
 	return nil
 }
 
-func GetAllAlarms(isOpen *bool) ([]models.Alarm, error) {
+func GetAlarms(isOpen *bool) ([]models.Alarm, error) {
 	var alarms []models.Alarm
 	db := db.GetDB()
 
