@@ -25,6 +25,7 @@ func main() {
 	app.Get("/", h.RootHandler)
 
 	app.Get("/getAlarams", h.GetAlarms)
+	app.Get("/getSocEmp", h.GetSocEmployee)
 	app.Post("/alarm", h.CreateAlarmHandler)
 	app.Post("/noises", h.CreateNoiseHandler)
 	log.Fatal(app.Listen(":8070"))
