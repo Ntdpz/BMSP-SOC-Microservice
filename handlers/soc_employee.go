@@ -5,6 +5,7 @@ import (
 	"bmsp-backend-service/repositories"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -24,7 +25,6 @@ func (h handlers) GetSocEmployee(c *fiber.Ctx) error {
 }
 
 func (h handlers) CreateSocEmployee(c *fiber.Ctx) error {
-	// รับข้อมูลจาก body
 	var requestBody models.SocEmployee
 
 	if requestBody.IsActive == nil {
@@ -51,6 +51,45 @@ func (h handlers) CreateSocEmployee(c *fiber.Ctx) error {
 
 	return c.Status(http.StatusCreated).JSON(fiber.Map{
 		"message": "Employee created successfully",
+		// "data":    requestBody,
+	})
+}
+
+func (h handlers) UpdateSocEmployee(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	var requestBody models.SocEmployee
+	if err := c.BodyParser(&requestBody); err != nil {
+		log.Println("Error parsing request body:", err)
+		return c.Status(http.StatusBadRequest).SendString("Invalid request data")
+	}
+
+	existingEmployee, err := repositories.GetSocEmployeeByID(id)
+	if err != nil {
+		log.Println("Error retrieving employee:", err)
+		return c.Status(http.StatusInternalServerError).SendString("Failed to retrieve employee")
+	}
+	
+	if requestBody.FirstName == "" {
+		requestBody.FirstName = existingEmployee.FirstName
+	}
+	if requestBody.LastName == "" {
+		requestBody.LastName = existingEmployee.LastName
+	}
+	if requestBody.IsActive == nil {
+		requestBody.IsActive = existingEmployee.IsActive
+	}
+
+	requestBody.UpdatedAt = time.Now()
+
+	err = repositories.UpdateSocEmployee(id, requestBody)
+	if err != nil {
+		log.Println("Error updating employee data:", err)
+		return c.Status(http.StatusInternalServerError).SendString("Failed to update employee")
+	}
+
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"message": "Employee updated successfully",
 		// "data":    requestBody,
 	})
 }

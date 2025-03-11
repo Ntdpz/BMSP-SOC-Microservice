@@ -31,5 +31,7 @@ func main() {
 	app.Post("/noises", h.CreateNoiseHandler)
 	app.Post("/socemployees", h.CreateSocEmployee)
 
+	app.Put("/socemployees/:id", h.UpdateSocEmployee)
+
 	log.Fatal(app.Listen(":8070"))
 }
