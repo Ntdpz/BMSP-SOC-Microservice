@@ -38,3 +38,26 @@ func GetAlarms(filter models.FilterAlarm) ([]models.Alarm, error) {
 
 	return alarms, nil
 }
+
+func GetAlarmByID(alarmID string) (*models.Alarm, error) {
+	var alarm models.Alarm
+	db := db.GetDB()
+
+	if err := db.Where("alarm_id = ?", alarmID).First(&alarm).Error; err != nil {
+		log.Println("Error retrieving alarm by alarm_id:", err)
+		return nil, err
+	}
+
+	return &alarm, nil
+}
+
+func UpdateAlarm(alarm *models.Alarm) error {
+	db := db.GetDB()
+
+	if err := db.Save(alarm).Error; err != nil {
+		log.Println("Error updating alarm:", err)
+		return err
+	}
+
+	return nil
+}

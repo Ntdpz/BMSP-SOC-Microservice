@@ -5,6 +5,7 @@ import (
 	"bmsp-backend-service/repositories"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -52,4 +53,42 @@ func (h handlers) GetAlarms(c *fiber.Ctx) error {
 		"data":  alarms,
 		"count": len(alarms),
 	})
+}
+
+func (h handlers) UpdateAlarmHandler(c *fiber.Ctx) error {
+	alarmID := c.Params("alarm_id")
+
+	var requestBody struct {
+		IsOpen    *bool  `json:"is_open"`
+		UpdatedBy string `json:"updated_by"`
+	}
+
+	if err := c.BodyParser(&requestBody); err != nil {
+		log.Println("Error parsing request body:", err)
+		return c.Status(http.StatusBadRequest).SendString("Invalid request data")
+	}
+
+	alarm, err := repositories.GetAlarmByID(alarmID)
+	if err != nil {
+		log.Println("Error retrieving alarm:", err)
+		return c.Status(http.StatusNotFound).SendString("Alarm not found")
+	}
+
+	if requestBody.IsOpen != nil {
+		alarm.IsOpen = *requestBody.IsOpen
+	}
+
+	if requestBody.UpdatedBy != "" {
+		alarm.UpdatedBy = requestBody.UpdatedBy
+	}
+
+	alarm.UpdatedAt = time.Now()
+
+	err = repositories.UpdateAlarm(alarm)
+	if err != nil {
+		log.Println("Error updating alarm:", err)
+		return c.Status(http.StatusInternalServerError).SendString("Failed to update alarm")
+	}
+
+	return c.Status(http.StatusOK).JSON(alarm)
 }

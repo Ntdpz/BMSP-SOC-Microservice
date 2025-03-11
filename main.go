@@ -32,6 +32,7 @@ func main() {
 	app.Post("/socemployees", h.CreateSocEmployee)
 
 	app.Put("/socemployees/:id", h.UpdateSocEmployee)
+	app.Put("/alarms/:alarm_id", h.UpdateAlarmHandler)
 
 	log.Fatal(app.Listen(":8070"))
 }
