@@ -16,12 +16,18 @@ func GetSocEmployees() ([]models.SocEmployee, error) {
 		log.Println("Error retrieving employees:", err)
 		return nil, err
 	}
-
-	// แปลงเวลาของพนักงานทุกคนเป็นโซนไทย
-	// for i := range employees {
-	// 	employees[i].CreatedAt = utils.ConvertToThaiTime(employees[i].CreatedAt)
-	// 	employees[i].UpdatedAt = utils.ConvertToThaiTime(employees[i].UpdatedAt)
-	// }
-
 	return employees, nil
+}
+
+// InsertSocEmployee เพิ่มข้อมูลพนักงานใหม่ในฐานข้อมูล
+func InsertSocEmployee(employee models.SocEmployee) error {
+	db := db.GetDB()
+
+	// สร้างข้อมูลพนักงานใหม่ในฐานข้อมูล
+	if err := db.Create(&employee).Error; err != nil {
+		log.Println("Error inserting employee:", err)
+		return err
+	}
+
+	return nil
 }
