@@ -4,7 +4,7 @@ import (
 	"bmsp-backend-service/models"
 	"bmsp-backend-service/repositories"
 	"log"
-	"strconv"
+	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -31,20 +31,18 @@ func (h handlers) CreateAlarmHandler(c *fiber.Ctx) error {
 
 	return c.Status(201).JSON(requestBody.Data)
 }
-func (h handlers) GetAlarms(c *fiber.Ctx) error {
-	isOpenStr := c.Query("is_open")
-	var isOpen *bool
 
-	if isOpenStr != "" {
-		parsedIsOpen, err := strconv.ParseBool(isOpenStr)
-		if err != nil {
-			log.Println("Invalid is_open value:", err)
-			return c.Status(400).SendString("Invalid is_open value")
-		}
-		isOpen = &parsedIsOpen
+func (h handlers) GetAlarms(c *fiber.Ctx) error {
+	var filter models.FilterAlarm
+
+	err := c.QueryParser(&filter)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+			"err": err.Error(),
+		})
 	}
 
-	alarms, err := repositories.GetAlarms(isOpen)
+	alarms, err := repositories.GetAlarms(filter)
 	if err != nil {
 		log.Println("Error retrieving alarms:", err)
 		return c.Status(500).SendString("Failed to retrieve alarms")

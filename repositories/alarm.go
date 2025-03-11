@@ -17,20 +17,23 @@ func InsertAlarm(alarms []models.Alarm) error {
 	return nil
 }
 
-func GetAlarms(isOpen *bool) ([]models.Alarm, error) {
+func GetAlarms(filter models.FilterAlarm) ([]models.Alarm, error) {
 	var alarms []models.Alarm
 	db := db.GetDB()
 
-	if isOpen != nil {
-		if err := db.Where("is_open = ?", *isOpen).Find(&alarms).Error; err != nil {
-			log.Println("Error retrieving alarms with is_open filter:", err)
-			return nil, err
-		}
-	} else {
-		if err := db.Find(&alarms).Error; err != nil {
-			log.Println("Error retrieving alarms:", err)
-			return nil, err
-		}
+	pipeline := db
+
+	if filter.IsOpen != nil {
+		pipeline = pipeline.Where("is_open = ?", *filter.IsOpen)
+	}
+
+	if filter.CustomerName != "" {
+		pipeline = pipeline.Where("customer_name = ?", filter.CustomerName)
+	}
+
+	if err := pipeline.Find(&alarms).Error; err != nil {
+		log.Println("Error retrieving alarms with is_open filter:", err)
+		return nil, err
 	}
 
 	return alarms, nil
