@@ -1,6 +1,6 @@
 package models
 
 type FilterAlarm struct {
-	IsOpen       *bool  `query:"is_open"`
+	EventStatus  string `query:"eventstatus"`
 	CustomerName string `query:"customer_name"`
 }

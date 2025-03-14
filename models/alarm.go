@@ -14,6 +14,6 @@ type Alarm struct {
 	URL          string    `json:"url" db:"url"`
 	CreatedAt    time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"`
-	IsOpen       bool      `json:"is_open" db:"is_open"`
+	Eventstatus  string    `json:"eventstatus" db:"eventstatus"`
 	UpdatedBy    string    `json:"updated_by" db:"updated_by"`
 }

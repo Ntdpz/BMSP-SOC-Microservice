@@ -59,8 +59,8 @@ func (h handlers) UpdateAlarmHandler(c *fiber.Ctx) error {
 	alarmID := c.Params("alarm_id")
 
 	var requestBody struct {
-		IsOpen    *bool  `json:"is_open"`
-		UpdatedBy string `json:"updated_by"`
+		Eventstatus string `json:"eventstatus"` // Change to eventstatus
+		UpdatedBy   string `json:"updated_by"`
 	}
 
 	if err := c.BodyParser(&requestBody); err != nil {
@@ -74,8 +74,8 @@ func (h handlers) UpdateAlarmHandler(c *fiber.Ctx) error {
 		return c.Status(http.StatusNotFound).SendString("Alarm not found")
 	}
 
-	if requestBody.IsOpen != nil {
-		alarm.IsOpen = *requestBody.IsOpen
+	if requestBody.Eventstatus != "" {
+		alarm.Eventstatus = requestBody.Eventstatus // Change to eventstatus
 	}
 
 	if requestBody.UpdatedBy != "" {

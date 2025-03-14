@@ -23,8 +23,8 @@ func GetAlarms(filter models.FilterAlarm) ([]models.Alarm, error) {
 
 	pipeline := db
 
-	if filter.IsOpen != nil {
-		pipeline = pipeline.Where("is_open = ?", *filter.IsOpen)
+	if filter.EventStatus != "" {
+		pipeline = pipeline.Where("eventstatus = ?", filter.EventStatus) // Change to eventstatus
 	}
 
 	if filter.CustomerName != "" {
@@ -32,7 +32,7 @@ func GetAlarms(filter models.FilterAlarm) ([]models.Alarm, error) {
 	}
 
 	if err := pipeline.Find(&alarms).Error; err != nil {
-		log.Println("Error retrieving alarms with is_open filter:", err)
+		log.Println("Error retrieving alarms with eventstatus filter:", err)
 		return nil, err
 	}
 
